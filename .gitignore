@@ -1,0 +1,8 @@
+__pycache__
+
+.env
+testing.py
+vision/data/train/*
+vision/data/test/*
+vision/model/*
+vision/cache

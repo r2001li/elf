@@ -2,6 +2,7 @@ import torch
 from torchvision import transforms
 
 from PIL import Image
+from PIL import UnidentifiedImageError
 
 from tqdm.auto import tqdm
 from typing import Dict, List, Tuple
@@ -103,8 +104,13 @@ def predict_image(model: torch.nn.Module,
                   class_names: List[str], 
                   image_path: str, 
                   device: torch.device):
-     # Open image
-    img = Image.open(image_path).convert("RGB")
+    # Open image
+    try:
+        img = Image.open(image_path).convert("RGB")
+    except UnidentifiedImageError:
+        raise UnidentifiedImageError
+    except FileNotFoundError:
+        raise FileNotFoundError
 
     image_transform = transforms.Compose(
         [

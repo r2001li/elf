@@ -24,14 +24,8 @@ class ELFVision(commands.Cog):
         except FileNotFoundError or FileExistsError:
             print(f"Model file not fount at {target_dir}")
     
-    @discord.slash_command()
+    @discord.slash_command(description="Sends an image for ELF to guess")
     async def guess(self, ctx, img: discord.Attachment):
-        '''
-        if img.content_type != "image":
-            await ctx.respond("Please provide an image.")
-            return
-        '''
-        
         file = await img.to_file()
         label, confidence = engine.predict_image(model=self.model, 
                                                        class_names=self.class_names, 

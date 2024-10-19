@@ -104,7 +104,7 @@ def predict_image(model: torch.nn.Module,
                   image_path: str, 
                   device: torch.device):
      # Open image
-    img = Image.open(image_path)
+    img = Image.open(image_path).convert("RGB")
 
     image_transform = transforms.Compose(
         [

@@ -1,3 +1,4 @@
+CACHE_DIR = "vision/cache"
 IMAGE_SIZE = 224
 
 # AI Training

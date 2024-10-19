@@ -10,13 +10,13 @@ class ELFVisionModel(nn.Module):
 
         self.conv_block_1 = nn.Sequential(
             nn.Conv2d(in_channels=input_shape, 
-                      out_channels=10,
+                      out_channels=64,
                       kernel_size=3,
                       stride=1,
                       padding=0),
             nn.ReLU(),
-            nn.Conv2d(in_channels=10, 
-                      out_channels=10,
+            nn.Conv2d(in_channels=64, 
+                      out_channels=64,
                       kernel_size=3,
                       stride=1,
                       padding=0),
@@ -25,14 +25,14 @@ class ELFVisionModel(nn.Module):
         )
 
         self.conv_block_2 = nn.Sequential(
-            nn.Conv2d(in_channels=10,
-                      out_channels=10,
+            nn.Conv2d(in_channels=64,
+                      out_channels=64,
                       kernel_size=3,
                       stride=1,
                       padding=0),
             nn.ReLU(),
-            nn.Conv2d(in_channels=10, 
-                      out_channels=10,
+            nn.Conv2d(in_channels=64, 
+                      out_channels=64,
                       kernel_size=3,
                       stride=1,
                       padding=0),
@@ -42,7 +42,7 @@ class ELFVisionModel(nn.Module):
 
         self.classifier = nn.Sequential(
             nn.Flatten(),
-            nn.Linear(in_features=10 * 13 * 13,
+            nn.Linear(in_features=64 * 13 * 13,
                       out_features=output_shape)
         )
     
@@ -60,22 +60,6 @@ class ELFVision2Model(nn.Module):
 
         self.conv_block_1 = nn.Sequential(
             nn.Conv2d(in_channels=input_shape, 
-                      out_channels=10,
-                      kernel_size=3,
-                      stride=1,
-                      padding=0),
-            nn.ReLU(),
-            nn.Conv2d(in_channels=10, 
-                      out_channels=10,
-                      kernel_size=3,
-                      stride=1,
-                      padding=0),
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2)
-        )
-
-        self.conv_block_2 = nn.Sequential(
-            nn.Conv2d(in_channels=10,
                       out_channels=64,
                       kernel_size=3,
                       stride=1,
@@ -90,7 +74,7 @@ class ELFVision2Model(nn.Module):
             nn.MaxPool2d(kernel_size=2)
         )
 
-        self.conv_block_3 = nn.Sequential(
+        self.conv_block_2 = nn.Sequential(
             nn.Conv2d(in_channels=64,
                       out_channels=128,
                       kernel_size=3,
@@ -106,7 +90,7 @@ class ELFVision2Model(nn.Module):
             nn.MaxPool2d(kernel_size=2)
         )
 
-        self.conv_block_4 = nn.Sequential(
+        self.conv_block_3 = nn.Sequential(
             nn.Conv2d(in_channels=128,
                       out_channels=128,
                       kernel_size=3,
@@ -124,7 +108,7 @@ class ELFVision2Model(nn.Module):
 
         self.classifier = nn.Sequential(
             nn.Flatten(),
-            nn.Linear(in_features=128 * 10 * 10,
+            nn.Linear(in_features=128 * 14 * 14,
                       out_features=output_shape)
         )
     
@@ -134,8 +118,6 @@ class ELFVision2Model(nn.Module):
         x = self.conv_block_2(x)
         # print(x.shape)
         x = self.conv_block_3(x)
-        # print(x.shape)
-        x = self.conv_block_4(x)
         # print(x.shape)
         x = self.classifier(x)
         return x

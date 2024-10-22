@@ -3,27 +3,35 @@ from discord.ext import commands
 
 import torch
 
+from safetensors.torch import load_model
+
 from pathlib import Path
 from PIL import UnidentifiedImageError
 
 from config import config
+from vision import model_builder
 from vision import engine
 from vision import data_handler
 
 class ELFVision(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.class_names = data_handler.get_classes()
+        self.model = model_builder.ELFVision2Model(input_shape=3, output_shape=len(self.class_names))
 
         # Load saved model
-        target_dir = Path(config.MODEL_DIR)
-        model_path = target_dir / config.MODEL_NAME
+        model_dir = Path(config.MODEL_DIR)
+        model_path = model_dir / config.MODEL_NAME
+        load_model(model=self.model, filename=model_path, device=self.device)
         
+        '''
         try:
             self.model = torch.load(f=model_path, weights_only=False)
         except FileNotFoundError or FileExistsError:
-            print(f"Model file not fount at {target_dir}")
+            print(f"Model file not fount at {model_dir}")
+        '''
     
     @discord.slash_command(description="Sends an image for ELF to guess")
     async def guess(self, ctx, image: discord.Attachment):
@@ -35,7 +43,7 @@ class ELFVision(commands.Cog):
                                                        image_path=file.fp, 
                                                        device=self.device)
         except UnidentifiedImageError or FileNotFoundError:
-            await ctx.respond("Invalid file. Please provide a valid image file.")
+            await ctx.respond("Invalid format. Please provide a valid image file.")
             return
         
         # await ctx.respond(f"Content: {label}\nConfidence: {confidence * 100:.2f}%", file=file)

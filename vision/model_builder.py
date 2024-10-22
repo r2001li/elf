@@ -2,8 +2,6 @@ import torch
 from torch import nn
 
 '''
-A basic convolutional neural network model
-'''
 class ELFVisionModel(nn.Module):
     def __init__(self, input_shape: int, output_shape: int):
         super().__init__()
@@ -53,6 +51,7 @@ class ELFVisionModel(nn.Module):
         # print(x.shape)
         x = self.classifier(x)
         return x
+'''
     
 class ELFVision2Model(nn.Module):
     def __init__(self, input_shape: int, output_shape: int):

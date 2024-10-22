@@ -7,6 +7,6 @@ BATCH_SIZE = 32
 NUM_EPOCHS = 20
 LEARNING_RATE = 0.01
 MODEL_DIR = "vision/model"
-MODEL_NAME = "ELFVision2.pth"
+MODEL_NAME = "ELFVision2.safetensors"
 TRAIN_DIR = "vision/data/train"
 TEST_DIR = "vision/data/test"

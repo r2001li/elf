@@ -3,6 +3,8 @@ import os
 import torch
 from torch import nn
 
+from safetensors.torch import save_model
+
 from pathlib import Path
 
 from config import config
@@ -10,14 +12,15 @@ from vision import data_handler
 from vision import model_builder
 from vision import engine
 
-def save_model(model: torch.nn.Module):
+def save_tensors(model: torch.nn.Module):
     print("Saving model")
 
-    target_dir = Path(config.MODEL_DIR)
-    model_save_path = target_dir / config.MODEL_NAME
+    model_dir = Path(config.MODEL_DIR)
+    model_path = model_dir / config.MODEL_NAME
 
-    print(f"[INFO] Saving model to: {model_save_path}")
-    torch.save(obj=model, f=model_save_path)
+    print(f"[INFO] Saving model to: {model_path}")
+    save_model(model=model, filename=model_path)
+    # torch.save(obj=model, f=model_save_path)
 
 def main():
     train_dataloader, test_dataloader, class_names = data_handler.build_dataloaders()
@@ -49,7 +52,7 @@ def main():
                  device=device)
     
     # Save model to file
-    save_model(model=model)
+    save_tensors(model=model)
 
 if __name__ == '__main__':
     main()

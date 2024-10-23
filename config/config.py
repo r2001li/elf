@@ -1,6 +1,10 @@
 CACHE_DIR = "vision/cache"
 IMAGE_SIZE = 144
 
+# Database
+DATABASE_DIR = "database"
+DATABASE_FILENAME = "elf_database.db"
+
 # AI Training
 INPUT_SHAPE = 3
 BATCH_SIZE = 32

@@ -1,6 +1,9 @@
 __pycache__
 
 .env
+
+database/*
+
 testing.py
 vision/data/train/*
 vision/data/test/*

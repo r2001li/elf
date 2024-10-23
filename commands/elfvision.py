@@ -16,10 +16,10 @@ from vision import data_handler
 class ELFVision(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        
+
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.class_names = data_handler.get_classes()
-        self.model = model_builder.ELFVision2Model(input_shape=3, output_shape=len(self.class_names))
+        self.model = model_builder.ELFVision2Model(input_shape=config.INPUT_SHAPE, output_shape=len(self.class_names))
 
         # Load saved model
         model_dir = Path(config.MODEL_DIR)

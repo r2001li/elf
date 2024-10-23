@@ -8,7 +8,7 @@ print("Instantiating ELF")
 bot = ELF()
 
 cogs_list = [
-    'elfvision'
+    'general'
 ]
 
 print("Loading extensions")

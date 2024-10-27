@@ -10,6 +10,7 @@ class Database(commands.Cog):
         super().__init__()
         self.bot = bot
 
+        print(f"Connecting to database: {config.DATABASE_FILENAME}")
         self.conn = sqlite3.connect(config.DATABASE_DIR + "/" + config.DATABASE_FILENAME)
 
         cursor = self.conn.cursor()

@@ -18,12 +18,16 @@ class ELFVision(commands.Cog):
         self.bot = bot
 
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        print(f"Using device: {self.device}")
+
         self.class_names = data_handler.get_classes()
         self.model = model_builder.ELFVision2Model(input_shape=config.INPUT_SHAPE, output_shape=len(self.class_names))
 
         # Load saved model
         model_dir = Path(config.MODEL_DIR)
         model_path = model_dir / config.MODEL_NAME
+
+        print("Loading model state dict")
         load_model(model=self.model, filename=model_path, device=self.device)
         
         '''
@@ -46,8 +50,15 @@ class ELFVision(commands.Cog):
             await ctx.respond("Invalid format. Please provide a valid image file.")
             return
         
-        # await ctx.respond(f"Content: {label}\nConfidence: {confidence * 100:.2f}%", file=file)
-        await ctx.respond(embed=discord.Embed(image=image.url, description=f"Content: {label}\nConfidence: {confidence * 100:.2f}%"))
+        embed = discord.Embed()
+        embed.set_author(name=str(ctx.author), icon_url=ctx.author.display_avatar.url)
+        embed.set_image(url=image.url)
+        embed.add_field(name="Content", value=label)
+        embed.add_field(name="Confidence", value=f"{confidence * 100:.2f}%")
+        
+        # await ctx.respond(embed=discord.Embed(image=image.url, description=f"Content: {label}\nConfidence: {confidence * 100:.2f}%"))
+
+        await ctx.respond(embed=embed)
 
 def setup(bot):
     bot.add_cog(ELFVision(bot))    

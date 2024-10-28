@@ -14,7 +14,18 @@ class Database(commands.Cog):
         self.conn = sqlite3.connect(config.DATABASE_DIR + "/" + config.DATABASE_FILENAME)
 
         cursor = self.conn.cursor()
-        cursor.execute('''CREATE TABLE IF NOT EXISTS tags (guildID integer, tagName text UNIQUE PRIMARY KEY, tagContent text)''')
+
+        # Create a relation for tags (if not done already)
+        cursor.execute('''
+                       CREATE TABLE IF NOT EXISTS Tags 
+                       (
+                       guildID integer,
+                       tagName text,
+                       tagContent text,
+                       PRIMARY KEY (guildID, tagName)
+                       )
+                       ''')
+
         self.conn.commit()
         cursor.close()
     
@@ -22,7 +33,18 @@ class Database(commands.Cog):
     async def tag_add(self, ctx, tag, content):
         cursor = self.conn.cursor()
         guildID = ctx.guild.id
-        cursor.execute(f"INSERT INTO tags VALUES ({guildID}, \'{tag}\', \'{content}\')")
+
+        # Check if tag already exists for this server
+        cursor.execute(f"SELECT tagContent FROM Tags WHERE guildID = {guildID} AND tagName = \'{tag}\'")
+        res = cursor.fetchone()
+
+        if not res is None:
+            self.conn.commit()
+            cursor.close()
+            return await ctx.respond(f"Tag \'{tag}\' already exists in this server.")
+        
+        # Add new tag to database
+        cursor.execute(f"INSERT INTO Tags VALUES ({guildID}, \'{tag}\', \'{content}\')")
         self.conn.commit()
         cursor.close()
 
@@ -32,7 +54,7 @@ class Database(commands.Cog):
     async def tag_get(self, ctx, tag):
         cursor = self.conn.cursor()
         guildID = ctx.guild.id
-        cursor.execute(f"SELECT tagContent FROM tags WHERE guildID = {guildID} AND tagName = \'{tag}\'")
+        cursor.execute(f"SELECT tagContent FROM Tags WHERE guildID = {guildID} AND tagName = \'{tag}\'")
         res = cursor.fetchone()
 
         if res is None:

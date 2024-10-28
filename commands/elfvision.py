@@ -37,7 +37,7 @@ class ELFVision(commands.Cog):
             print(f"Model file not fount at {model_dir}")
         '''
     
-    @discord.slash_command(description="Sends an image for ELF to guess")
+    @discord.slash_command(description="Sends an image for ELF to guess.")
     async def guess(self, ctx, image: discord.Attachment):
         file = await image.to_file()
 

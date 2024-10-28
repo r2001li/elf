@@ -29,7 +29,7 @@ class Database(commands.Cog):
         self.conn.commit()
         cursor.close()
     
-    @discord.slash_command()
+    @discord.slash_command(description="Add a tag to this server.")
     async def tag_add(self, ctx, tag, content):
         cursor = self.conn.cursor()
         guildID = ctx.guild.id
@@ -50,7 +50,7 @@ class Database(commands.Cog):
 
         await ctx.respond(f"Added tag \'{tag}\'.")
     
-    @discord.slash_command()
+    @discord.slash_command(description="Access a tag from this server.")
     async def tag_get(self, ctx, tag):
         cursor = self.conn.cursor()
         guildID = ctx.guild.id

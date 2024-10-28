@@ -7,7 +7,7 @@ class General(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
-    @commands.slash_command()
+    @commands.slash_command(description="View an account's date of creation and when it joined this server.")
     async def userage(self, ctx, user: Option(discord.Member)):
         date_format = "%a, %d %b %Y %I:%M %p"
 

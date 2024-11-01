@@ -2,20 +2,15 @@ import os
 
 from dotenv import load_dotenv
 
+from config import config
 from bot.elf_builder import ELF
 
 print("Instantiating ELF...")
 bot = ELF()
 
-cogs_list = [
-    'general',
-    'database',
-    'elfvision'
-]
-
 print("Loading extensions...")
 
-for cog in cogs_list:
+for cog in config.COGS_LIST:
     bot.load_extension(f"commands.{cog}")
     print(f"Loaded extension: {cog}")
 

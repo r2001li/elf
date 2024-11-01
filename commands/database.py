@@ -29,9 +29,10 @@ class Database(commands.Cog):
         self.conn.commit()
         cursor.close()
     
+    ### Tags Command Group ###
     tags = discord.SlashCommandGroup(name="tags", description="Manage tags")
     
-    #@discord.slash_command(description="Add a tag to this server.")
+    # Add tag
     @tags.command()
     async def add(self, ctx, tag, content):
         cursor = self.conn.cursor()
@@ -53,7 +54,7 @@ class Database(commands.Cog):
 
         await ctx.respond(f"Added tag \'{tag}\'.")
     
-    #@discord.slash_command(description="Access a tag from this server.")
+    # Fetch tag
     @tags.command()
     async def get(self, ctx, tag):
         cursor = self.conn.cursor()
@@ -71,7 +72,26 @@ class Database(commands.Cog):
         self.conn.commit()
         cursor.close()
 
-        await ctx.respond(content)
+        await ctx.respond(f"tag: {tag}\n{content}")
+    
+    # List all tags
+    @tags.command()
+    async def list(self, ctx):
+        cursor = self.conn.cursor()
+        guildID = ctx.guild.id
+
+        cursor.execute(f"SELECT tagName FROM Tags WHERE guildID = {guildID}")
+        res = cursor.fetchall()
+
+        if not res:
+            self.conn.commit()
+            cursor.close()
+            await ctx.respond(f"No tags found for the current server.")
+            return
+
+        self.conn.commit()
+        cursor.close()
+        await ctx.respond(res)
 
     
 def setup(bot):

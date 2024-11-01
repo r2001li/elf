@@ -30,10 +30,10 @@ class Database(commands.Cog):
         cursor.close()
     
     ### Tags Command Group ###
-    tags = discord.SlashCommandGroup(name="tags", description="Manage tags")
+    tag = discord.SlashCommandGroup(name="tag", description="Manage tags")
     
     # Add tag
-    @tags.command()
+    @tag.command()
     async def add(self, ctx, tag, content):
         cursor = self.conn.cursor()
         guildID = ctx.guild.id
@@ -52,10 +52,10 @@ class Database(commands.Cog):
         self.conn.commit()
         cursor.close()
 
-        await ctx.respond(f"Added tag \'{tag}\'.")
+        await ctx.respond(f"Added tag: {tag}")
     
     # Fetch tag
-    @tags.command()
+    @tag.command()
     async def get(self, ctx, tag):
         cursor = self.conn.cursor()
         guildID = ctx.guild.id
@@ -65,7 +65,7 @@ class Database(commands.Cog):
         if res is None:
             self.conn.commit()
             cursor.close()
-            await ctx.respond(f"No matching tag found for \'{tag}\'.")
+            await ctx.respond(f"No matching tag found for: {tag}")
             return
         
         content = res[0]
@@ -75,7 +75,7 @@ class Database(commands.Cog):
         await ctx.respond(f"tag: {tag}\n{content}")
     
     # List all tags
-    @tags.command()
+    @tag.command()
     async def list(self, ctx):
         cursor = self.conn.cursor()
         guildID = ctx.guild.id
@@ -91,7 +91,9 @@ class Database(commands.Cog):
 
         self.conn.commit()
         cursor.close()
-        await ctx.respond(res)
+
+        tags = map(lambda x: x[0], res)
+        await ctx.respond("\n".join(tags))
 
     
 def setup(bot):

@@ -46,7 +46,7 @@ class ELFVision(commands.Cog):
                                                        class_names=self.class_names, 
                                                        image_path=file.fp, 
                                                        device=self.device)
-        except UnidentifiedImageError or FileNotFoundError:
+        except (UnidentifiedImageError, FileNotFoundError):
             await ctx.respond("Invalid format. Please provide a valid image file.")
             return
         

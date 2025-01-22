@@ -1,7 +1,7 @@
 COGS_LIST = ['general', 'database', 'elfvision']
 
 CACHE_DIR = "vision/cache"
-IMAGE_SIZE = 144
+IMAGE_SIZE = 224
 
 # Database
 DATABASE_DIR = "database"

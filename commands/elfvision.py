@@ -29,13 +29,6 @@ class ELFVision(commands.Cog):
 
         print("Loading model state dict")
         load_model(model=self.model, filename=model_path, device=self.device)
-        
-        '''
-        try:
-            self.model = torch.load(f=model_path, weights_only=False)
-        except FileNotFoundError or FileExistsError:
-            print(f"Model file not fount at {model_dir}")
-        '''
     
     @discord.slash_command(description="Sends an image for ELF to guess.")
     async def guess(self, ctx, image: discord.Attachment):
@@ -47,18 +40,15 @@ class ELFVision(commands.Cog):
                                                        image_path=file.fp, 
                                                        device=self.device)
         except (UnidentifiedImageError, FileNotFoundError):
-            await ctx.respond("Invalid format. Please provide a valid image file.")
-            return
-        
+            return await ctx.respond("Invalid format. Please provide a valid image file.")
+            
         embed = discord.Embed()
         embed.set_author(name=str(ctx.author), icon_url=ctx.author.display_avatar.url)
         embed.set_image(url=image.url)
         embed.add_field(name="Content", value=label)
         embed.add_field(name="Confidence", value=f"{confidence * 100:.2f}%")
-        
-        # await ctx.respond(embed=discord.Embed(image=image.url, description=f"Content: {label}\nConfidence: {confidence * 100:.2f}%"))
 
-        await ctx.respond(embed=embed)
+        return await ctx.respond(embed=embed)
 
 def setup(bot):
     bot.add_cog(ELFVision(bot))    

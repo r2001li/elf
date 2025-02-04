@@ -1,4 +1,4 @@
-COGS_LIST = ['general', 'database', 'elfvision']
+COGS_LIST = ['general', 'database', 'vision']
 
 # Vision
 CACHE_DIR = "vision/cache"

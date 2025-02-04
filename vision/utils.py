@@ -25,13 +25,15 @@ LEARNING_RATE = 0.01
 BATCH_SIZE = 32
 
 def save_tensors(model: torch.nn.Module):
-    print("Saving model")
-
     model_path = get_model_path()
-
-    print(f"[INFO] Saving model to: {model_path}")
+    print("Saving model...")
     save_model(model=model, filename=model_path)
     # torch.save(obj=model, f=model_save_path)
+    print(f"Model weights are saved to {model_path}")
+
+def model_exists():
+    model_path = get_model_path()
+    return os.path.isfile(model_path)
 
 def get_model_path():
     model_dir = Path(MODEL_DIR) 
@@ -99,11 +101,11 @@ def train_vision():
     model_path = get_model_path()
 
     # Stop if model file already exists
-    if os.path.isfile(model_path):
-        print("Model file already found")
+    if model_exists():
+        print("Model already exists.")
         return
     
-    print(f"Model file not found at: {model_path} Training new model")
+    print(f"Model not found. Training new model...")
     
     # Instantiating a new neural network, loss function, and optimizer
     model = elfvision.ELFVisionNN(output_shape=len(class_names))
@@ -111,7 +113,6 @@ def train_vision():
     optimizer = torch.optim.SGD(params=model.parameters(), lr=LEARNING_RATE)
 
     # Train model
-    print("Begin training")
     device = get_device()
     vision_engine.train(model=model, 
                  train_dataloader=train_dataloader, 

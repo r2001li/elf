@@ -22,12 +22,21 @@ class Vision(commands.Cog):
         self.model = elfvision.ELFVisionNN(output_shape=len(self.class_names))
 
         # Load saved model
-        print("Loading model state dict...")
-        model_path = utils.get_model_path()
-        load_model(model=self.model, filename=model_path, device=self.device)
+        print("Loading vision model...")
+
+        if utils.model_exists():
+            model_path = utils.get_model_path()
+            load_model(model=self.model, filename=model_path, device=self.device)
+            self.has_model = True
+        else:
+            print("No vision model found. Computer vision functions will be disabled.")
+            self.has_model = False
     
     @discord.slash_command(description="Sends an image for ELF to guess.")
     async def guess(self, ctx, image: discord.Attachment):
+        if not self.has_model:
+            return await ctx.respond("Computer vision functions are disabled.")
+
         file = await image.to_file()
 
         try:
@@ -36,7 +45,7 @@ class Vision(commands.Cog):
                                                        image_path=file.fp, 
                                                        device=self.device)
         except (UnidentifiedImageError, FileNotFoundError):
-            return await ctx.respond("Invalid format. Please provide a valid image file.")
+            return await ctx.respond("Invalid format. Please provide a valid image.")
             
         embed = discord.Embed()
         embed.set_author(name=str(ctx.author), icon_url=ctx.author.display_avatar.url)

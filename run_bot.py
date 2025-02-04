@@ -11,7 +11,7 @@ bot = ELF()
 print("Loading extensions...")
 
 for cog in config.COGS_LIST:
-    bot.load_extension(f"commands.{cog}")
+    bot.load_extension(f"bot.commands.{cog}")
     print(f"Loaded extension: {cog}")
 
 print("Running ELF...")

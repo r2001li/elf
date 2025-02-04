@@ -5,29 +5,25 @@ import torch
 
 from safetensors.torch import load_model
 
-from pathlib import Path
 from PIL import UnidentifiedImageError
 
-from config import config
-from vision import model_builder
-from vision import engine
-from vision import data_handler
+from vision import elfvision
+from vision import vision_engine
+from vision import utils
 
-class ELFVision(commands.Cog):
+class Vision(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.device = utils.get_device()
         print(f"Using device: {self.device}")
 
-        self.class_names = data_handler.get_classes()
-        self.model = model_builder.ELFVision2Model(input_shape=config.INPUT_SHAPE, output_shape=len(self.class_names))
+        self.class_names = utils.get_classes()
+        self.model = elfvision.ELFVisionNN(output_shape=len(self.class_names))
 
         # Load saved model
-        model_dir = Path(config.MODEL_DIR)
-        model_path = model_dir / config.MODEL_NAME
-
-        print("Loading model state dict")
+        print("Loading model state dict...")
+        model_path = utils.get_model_path()
         load_model(model=self.model, filename=model_path, device=self.device)
     
     @discord.slash_command(description="Sends an image for ELF to guess.")
@@ -35,7 +31,7 @@ class ELFVision(commands.Cog):
         file = await image.to_file()
 
         try:
-            label, confidence = engine.predict_image(model=self.model, 
+            label, confidence = vision_engine.predict_image(model=self.model, 
                                                        class_names=self.class_names, 
                                                        image_path=file.fp, 
                                                        device=self.device)
@@ -51,4 +47,4 @@ class ELFVision(commands.Cog):
         return await ctx.respond(embed=embed)
 
 def setup(bot):
-    bot.add_cog(ELFVision(bot))    
+    bot.add_cog(Vision(bot))    

@@ -1,12 +1,14 @@
 import torch
 from torch import nn
 
+INPUT_SHAPE = 3
+
 class BigELFVisionNN(nn.Module):
-    def __init__(self, input_shape: int, output_shape: int):
+    def __init__(self, output_shape: int):
         super().__init__()
 
         self.conv_block_1 = nn.Sequential(
-                nn.Conv2d(in_channels=input_shape,
+                nn.Conv2d(in_channels=INPUT_SHAPE,
                     out_channels=64,
                     kernel_size=3,
                     stride=1,
@@ -202,13 +204,12 @@ class BigELFVisionNN(nn.Module):
         x = self.classifier(x)
         return x
 
-    
-class ELFVision2Model(nn.Module):
-    def __init__(self, input_shape: int, output_shape: int):
+class ELFVisionNN(nn.Module):
+    def __init__(self, output_shape: int):
         super().__init__()
 
         self.conv_block_1 = nn.Sequential(
-            nn.Conv2d(in_channels=input_shape, 
+            nn.Conv2d(in_channels=INPUT_SHAPE, 
                       out_channels=64,
                       kernel_size=3,
                       stride=1,

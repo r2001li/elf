@@ -5,6 +5,7 @@ __pycache__
 database/*
 
 test_classes.py
+test_vision.py
 vision/data/dataset/train/*
 vision/data/dataset/test/*
 vision/data/dataset/*.py

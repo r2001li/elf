@@ -33,15 +33,9 @@ def save_tensors(model: torch.nn.Module):
     # torch.save(obj=model, f=model_save_path)
     print(f"Saved model to {model_path}")
 
-def save_classes():
+def save_classes(classes):
     print("Saving class names...")
-    dataset_train = datasets.ImageFolder(
-            root=TRAIN_DIR,
-            transform=None,
-            target_transform=None
-            )
 
-    classes = dataset_train.classes
     dictionary = {}
     for i in range(0, len(classes)):
         index = str(i)
@@ -49,7 +43,7 @@ def save_classes():
 
     json_object = json.dumps(dictionary, indent=4)
     
-    classes_path = get_classes_path
+    classes_path = get_classes_path()
     with open(classes_path, "w") as outfile:
         outfile.write(json_object)
 
@@ -129,10 +123,6 @@ def build_dataloaders():
     return dataloader_train, dataloader_test, class_names
 
 def train_vision():
-    train_dataloader, test_dataloader, class_names = build_dataloaders()
-
-    model_path = get_model_path()
-
     # Stop if model file already exists
     if model_exists():
         print("Model already exists.")
@@ -140,8 +130,11 @@ def train_vision():
     
     print(f"Model not found. Training new model...")
     
+    train_dataloader, test_dataloader, class_names = build_dataloaders()
+    save_classes(class_names)
+
     # Instantiating a new neural network, loss function, and optimizer
-    model = elfvision.ELFVisionNN(output_shape=len(class_names))
+    model = elfvision.ELFVisionNN(input_shape=3, output_shape=len(class_names))
     loss_fn = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(params=model.parameters(), lr=LEARNING_RATE)
 

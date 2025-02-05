@@ -2,12 +2,12 @@ __pycache__
 
 .env
 
-database/*
+*.db
+*.safetensors
+test_*.py
 
-test_classes.py
-test_vision.py
 vision/data/dataset/train/*
 vision/data/dataset/test/*
 vision/data/dataset/*.py
-vision/data/models/*
+vision/data/models/*.json
 vision/cache

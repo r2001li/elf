@@ -14,23 +14,26 @@ from vision import utils
 class Vision(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
-        self.device = utils.get_device()
-        print(f"Using device: {self.device}")
-
-        self.class_names = utils.get_classes()
-        self.model = elfvision.ELFVisionNN(output_shape=len(self.class_names))
-
-        # Load saved model
-        print("Loading vision model...")
-
-        if utils.model_exists():
+        
+        if not (utils.classes_exists() and utils.model_exists()):
+            print("No class names found. Computer vision functions will be disabled.")
+            
+            self.has_model = False
+            self.device = None
+            self.class_names = None
+            self.model = None
+        else:
+            print("Loading vision model...")
+            
+            self.has_model = True
+            self.device = utils.get_device()
+            self.class_names = utils.get_classes()
+            self.model = elfvision.ELFVisionNN(output_shape=len(self.class_names))
+            
+            print(f"Sending model to device: {self.device}")
+            
             model_path = utils.get_model_path()
             load_model(model=self.model, filename=model_path, device=self.device)
-            self.has_model = True
-        else:
-            print("No vision model found. Computer vision functions will be disabled.")
-            self.has_model = False
     
     @discord.slash_command(description="Sends an image for ELF to guess.")
     async def guess(self, ctx, image: discord.Attachment):

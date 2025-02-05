@@ -4,8 +4,9 @@ __pycache__
 
 database/*
 
-testing.py
-vision/data/train/*
-vision/data/test/*
-vision/model/*
+test_classes.py
+vision/data/dataset/train/*
+vision/data/dataset/test/*
+vision/data/dataset/*.py
+vision/data/models/*
 vision/cache

@@ -1,8 +1,9 @@
 import os
 from pathlib import Path
+import json
 
 import torch
-from torch import nn
+from torch import nn, rand
 
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
@@ -14,11 +15,12 @@ from vision import vision_engine
 
 IMAGE_SIZE = 224
 
-MODEL_DIR = "vision/models"
-MODEL_NAME = "ELFVision2.safetensors"
+MODEL_DIR = "vision/data/models"
+MODEL_NAME = "model.safetensors"
+CLASSES_NAME = "classes.json"
 
-TRAIN_DIR = "vision/data/train"
-TEST_DIR = "vision/data/test"
+TRAIN_DIR = "vision/data/dataset/train"
+TEST_DIR = "vision/data/dataset/test"
 
 NUM_EPOCHS = 20
 LEARNING_RATE = 0.01
@@ -29,16 +31,47 @@ def save_tensors(model: torch.nn.Module):
     print("Saving model...")
     save_model(model=model, filename=model_path)
     # torch.save(obj=model, f=model_save_path)
-    print(f"Model weights are saved to {model_path}")
+    print(f"Saved model to {model_path}")
+
+def save_classes():
+    print("Saving class names...")
+    dataset_train = datasets.ImageFolder(
+            root=TRAIN_DIR,
+            transform=None,
+            target_transform=None
+            )
+
+    classes = dataset_train.classes
+    dictionary = {}
+    for i in range(0, len(classes)):
+        index = str(i)
+        dictionary[index] = classes[i]
+
+    json_object = json.dumps(dictionary, indent=4)
+    
+    classes_path = get_classes_path
+    with open(classes_path, "w") as outfile:
+        outfile.write(json_object)
+
+    print(f"Saved class names to {classes_path}")
 
 def model_exists():
     model_path = get_model_path()
     return os.path.isfile(model_path)
 
+def classes_exists():
+    classes_path = get_classes_path()
+    return os.path.isfile(classes_path)
+
 def get_model_path():
     model_dir = Path(MODEL_DIR) 
     model_path = model_dir / MODEL_NAME
     return model_path
+
+def get_classes_path():
+    classes_dir = Path(MODEL_DIR)
+    classes_path = classes_dir / CLASSES_NAME
+    return classes_path
 
 def get_classes():
     dataset_train = datasets.ImageFolder(

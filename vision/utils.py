@@ -68,6 +68,7 @@ def get_classes_path():
     return classes_path
 
 def get_classes():
+    """
     dataset_train = datasets.ImageFolder(
         root=TRAIN_DIR,
         transform=None,
@@ -75,6 +76,12 @@ def get_classes():
     )
 
     return dataset_train.classes
+    """
+
+    classes_path = get_classes_path()
+    with open(classes_path, "r") as f:
+        classes = json.load(f)
+    return classes
 
 def get_device():
     device = "cuda" if torch.cuda.is_available() else "cpu"

@@ -7,7 +7,7 @@ from PIL import UnidentifiedImageError
 from tqdm.auto import tqdm
 from typing import Dict, List, Tuple
 
-from config import config
+from vision import utils
 
 def train_epoch(model: torch.nn.Module,
                 dataloader: torch.utils.data.DataLoader,
@@ -100,8 +100,7 @@ def train(model: torch.nn.Module,
 
 
 
-def predict_image(model: torch.nn.Module, 
-                  class_names: List[str], 
+def predict_image(model: torch.nn.Module,  
                   image_path: str, 
                   device: torch.device):
     # Open image
@@ -114,7 +113,7 @@ def predict_image(model: torch.nn.Module,
 
     image_transform = transforms.Compose(
         [
-            transforms.Resize(size=(config.IMAGE_SIZE, config.IMAGE_SIZE)),
+            transforms.Resize(size=(utils.IMAGE_SIZE, utils.IMAGE_SIZE)),
             transforms.ToTensor(),
             transforms.Normalize(
                 mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
@@ -134,4 +133,4 @@ def predict_image(model: torch.nn.Module,
     target_image_pred_probs = torch.softmax(target_image_pred, dim=1)
     target_image_pred_label = torch.argmax(target_image_pred_probs, dim=1)
 
-    return class_names[target_image_pred_label], target_image_pred_probs.max()
+    return target_image_pred_label.tolist()[0], target_image_pred_probs.max()

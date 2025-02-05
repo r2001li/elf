@@ -19,16 +19,16 @@ class Vision(commands.Cog):
             print("No class names found. Computer vision functions will be disabled.")
             
             self.has_model = False
-            self.device = None
-            self.class_names = None
-            self.model = None
+            self.device = ""
+            self.class_names = {}
+            self.model = elfvision.ELFVisionNN(0,0)
         else:
             print("Loading vision model...")
             
             self.has_model = True
             self.device = utils.get_device()
             self.class_names = utils.get_classes()
-            self.model = elfvision.ELFVisionNN(output_shape=len(self.class_names))
+            self.model = elfvision.ELFVisionNN(input_shape=3, output_shape=len(self.class_names))
             
             print(f"Sending model to device: {self.device}")
             
@@ -43,13 +43,12 @@ class Vision(commands.Cog):
         file = await image.to_file()
 
         try:
-            label, confidence = vision_engine.predict_image(model=self.model, 
-                                                       class_names=self.class_names, 
-                                                       image_path=file.fp, 
-                                                       device=self.device)
+            id, confidence = vision_engine.predict_image(model=self.model, image_path=file.fp, device=self.device)
         except (UnidentifiedImageError, FileNotFoundError):
             return await ctx.respond("Invalid format. Please provide a valid image.")
-            
+        
+        label = self.class_names[str(id)]
+
         embed = discord.Embed()
         embed.set_author(name=str(ctx.author), icon_url=ctx.author.display_avatar.url)
         embed.set_image(url=image.url)

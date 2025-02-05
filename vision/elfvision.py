@@ -7,18 +7,8 @@ class ELFVisionNN(nn.Module):
     def __init__(self, input_shape: int, output_shape: int):
         super().__init__()
 
-        self.conv_block_0 = nn.Sequential(
-            nn.Conv2d(in_channels=input_shape,
-                      out_channels=64,
-                      kernel_size=7,
-                      stride=1,
-                      padding=0),
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2)
-        )
-
         self.conv_block_1 = nn.Sequential(
-            nn.Conv2d(in_channels=64, 
+            nn.Conv2d(in_channels=input_shape, 
                       out_channels=64,
                       kernel_size=3,
                       stride=1,
@@ -58,7 +48,6 @@ class ELFVisionNN(nn.Module):
                       stride=1,
                       padding=0),
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2)
         )
 
         self.conv_block_3 = nn.Sequential(
@@ -85,7 +74,7 @@ class ELFVisionNN(nn.Module):
                       kernel_size=3,
                       stride=1,
                       padding=0),
-            nn.ReLU(),            
+            nn.ReLU(), 
             nn.MaxPool2d(kernel_size=2)
         )
 
@@ -96,8 +85,6 @@ class ELFVisionNN(nn.Module):
         )
     
     def forward(self, x: torch.Tensor):
-        x = self.conv_block_0(x)
-        # print(x.shape)
         x = self.conv_block_1(x)
         # print(x.shape)
         x = self.conv_block_2(x)

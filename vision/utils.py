@@ -13,7 +13,7 @@ from safetensors.torch import save_model
 from vision import elfvision
 from vision import vision_engine
 
-IMAGE_SIZE = 224
+IMAGE_SIZE = 64
 
 MODEL_DIR = "vision/data/models"
 MODEL_NAME = "model.safetensors"
@@ -22,7 +22,7 @@ CLASSES_NAME = "classes.json"
 TRAIN_DIR = "vision/data/dataset/train"
 TEST_DIR = "vision/data/dataset/test"
 
-NUM_EPOCHS = 20
+NUM_EPOCHS = 10
 LEARNING_RATE = 0.01
 BATCH_SIZE = 32
 

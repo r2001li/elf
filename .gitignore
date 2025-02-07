@@ -9,5 +9,6 @@ test_*.py
 vision/data/dataset/train/*
 vision/data/dataset/test/*
 vision/data/dataset/*.py
+vision/data/dataset/.tar.gz
 vision/data/models/*.json
 vision/cache
